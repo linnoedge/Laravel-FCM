@@ -34,13 +34,7 @@ abstract class BaseRequest
      *
      * @return array
      */
-    protected function buildRequestHeader()
-    {
-        return [
-            'Content-Type' => 'application/json',
-            'project_id' => $this->config['sender_id'],
-        ];
-    }
+    abstract protected function buildRequestHeader();
 
     /**
      * Build the body of the request.
@@ -57,7 +51,7 @@ abstract class BaseRequest
     public function build()
     {
         return [
-            'headers' => $this->buildRequestHeader(),
+           // 'headers' => $this->buildRequestHeader(),
             'json' => $this->buildBody(),
         ];
     }
