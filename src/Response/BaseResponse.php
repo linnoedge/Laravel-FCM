@@ -47,13 +47,13 @@ abstract class BaseResponse
      */
     private function isJsonResponse(ResponseInterface $response)
     {
-        if ($response->getStatusCode() == 200) {
+        if ($response->getStatusCode() == 200 || $response->getStatusCode() == 404 || $response->getStatusCode() == 400) {
             return;
         }
 
-        if ($response->getStatusCode() == 400) {
-            throw new InvalidRequestException($response);
-        }
+        // if ($response->getStatusCode() == 400) {
+        //     throw new InvalidRequestException($response);
+        // }
 
         if ($response->getStatusCode() == 401) {
             throw new UnauthorizedRequestException($response);

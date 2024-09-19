@@ -146,7 +146,26 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
         if (array_key_exists(self::CANONICAL_IDS, $responseInJson)) {
             $this->numberTokenModify = $responseInJson[self::CANONICAL_IDS];
         }
+
+        if ($this->isUnregisteredError($responseInJson)) {
+            $this->numberTokensFailure = count($this->tokens);
+            $this->tokensToDelete = $this->tokens;
+        }
     }
+
+//    {
+//  "error": {
+//    "code": 404,
+//    "message": "Requested entity was not found.",
+//    "status": "NOT_FOUND",
+//    "details": [
+//      {
+//        "@type": "type.googleapis.com/google.firebase.fcm.v1.FcmError",
+//        "errorCode": "UNREGISTERED"
+//      }
+//    ]
+//  }
+//}
 
     /**
      * @internal
@@ -176,6 +195,12 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     private function needResultParsing($responseInJson)
     {
         return array_key_exists(self::RESULTS, $responseInJson) && ($this->numberTokensFailure > 0 || $this->numberTokenModify > 0);
+    }
+
+    private function isUnregisteredError($result)
+    {
+        return isset($result['error']['details'][0]['errorCode']) &&
+            in_array($result['error']['details'][0]['errorCode'], ['INVALID_ARGUMENT', 'UNREGISTERED']);
     }
 
     /**

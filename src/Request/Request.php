@@ -114,16 +114,6 @@ class Request extends BaseRequest
     }
 
     /**
-     * get registrationIds transformed.
-     *
-     * @return array|null
-     */
-    protected function getRegistrationIds()
-    {
-        return is_array($this->to) ? $this->to : null;
-    }
-
-    /**
      * get Options transformed.
      *
      * @return array
