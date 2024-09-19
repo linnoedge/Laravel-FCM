@@ -47,7 +47,7 @@ abstract class BaseResponse
      */
     private function isJsonResponse(ResponseInterface $response)
     {
-        if ($response->getStatusCode() == 200) {
+        if ($response->getStatusCode() == 200 || $response->getStatusCode() == 404) {
             return;
         }
 

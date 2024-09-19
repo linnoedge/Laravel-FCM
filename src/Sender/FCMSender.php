@@ -2,13 +2,14 @@
 
 namespace LaravelFCM\Sender;
 
+use GuzzleHttp\Exception\ClientException;
 use LaravelFCM\Message\Topics;
 use LaravelFCM\Request\Request;
 use LaravelFCM\Message\Options;
 use LaravelFCM\Message\PayloadData;
+use LaravelFCM\Response\Exceptions\ServerResponseException;
 use LaravelFCM\Response\GroupResponse;
 use LaravelFCM\Response\TopicResponse;
-use GuzzleHttp\Exception\ClientException;
 use LaravelFCM\Response\DownstreamResponse;
 use LaravelFCM\Message\PayloadNotification;
 
@@ -17,8 +18,6 @@ use LaravelFCM\Message\PayloadNotification;
  */
 class FCMSender extends HTTPSender
 {
-    const MAX_TOKEN_PER_REQUEST = 1000;
-
     /**
      * send a downstream message to.
      *
@@ -37,13 +36,12 @@ class FCMSender extends HTTPSender
         $response = null;
 
         if (is_array($to) && !empty($to)) {
-            $partialTokens = array_chunk($to, self::MAX_TOKEN_PER_REQUEST, false);
-            foreach ($partialTokens as $tokens) {
-                $request = new Request($tokens, $options, $notification, $data);
+            foreach ($to as $token) {
+                $request = new Request($token, $options, $notification, $data);
 
                 $responseGuzzle = $this->post($request);
 
-                $responsePartial = new DownstreamResponse($responseGuzzle, $tokens);
+                $responsePartial = new DownstreamResponse($responseGuzzle, $token);
                 if (!$response) {
                     $response = $responsePartial;
                 } else {
@@ -107,11 +105,11 @@ class FCMSender extends HTTPSender
     protected function post($request)
     {
         try {
-            $responseGuzzle = $this->client->request('post',$this->url, $request->build());
+            $response = $this->client->request('post',$this->url, $request->build());
         } catch (ClientException $e) {
-            $responseGuzzle = $e->getResponse();
+            $response = $e->getResponse();
         }
 
-        return $responseGuzzle;
+        return $response;
     }
 }

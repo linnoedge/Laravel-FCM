@@ -11,19 +11,6 @@ Class FCMSender
 * Parent class: [LaravelFCM\Sender\BaseSender](LaravelFCM-Sender-BaseSender.md)
 
 
-
-Constants
-----------
-
-
-### MAX_TOKEN_PER_REQUEST
-
-    const MAX_TOKEN_PER_REQUEST = 1000
-
-
-
-
-
 Properties
 ----------
 
