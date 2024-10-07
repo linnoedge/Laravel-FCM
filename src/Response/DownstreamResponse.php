@@ -435,4 +435,9 @@ class DownstreamResponse extends BaseResponse implements DownstreamResponseContr
     {
         return $this->hasMissingToken;
     }
+
+    public function getResponseInJson()
+    {
+        return $this->responseInJson;
+    }
 }

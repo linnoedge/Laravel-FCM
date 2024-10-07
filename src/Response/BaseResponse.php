@@ -21,6 +21,7 @@ abstract class BaseResponse
      * @var bool
      */
     protected $logEnabled = false;
+    protected $responseInJson;
 
     /**
      * BaseResponse constructor.
@@ -32,8 +33,9 @@ abstract class BaseResponse
         $this->isJsonResponse($response);
         $this->logEnabled = app('config')->get('fcm.log_enabled', false);
         $responseBody = $response->getBody();
-        $responseInJson = json_decode($responseBody, true);
-        $this->parseResponse($responseInJson);
+        $this->responseInJson = json_decode($responseBody, true);
+
+        $this->parseResponse($this->responseInJson);
     }
 
     /**
